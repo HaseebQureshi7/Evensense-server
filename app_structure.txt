@@ -1,0 +1,40 @@
+src/
+├── domain/               # Core business logic (independent of external dependencies)
+│   ├── entities/         # Business models (e.g., Project.ts, User.ts)
+│   ├── repositories/     # Repository interfaces (no DB logic, only method signatures)
+│   ├── services/         # Domain-specific services (pure business logic)
+│
+├── application/          # Use case logic (interacts with domain/repositories)
+│   ├── use-cases/        # Business rules (e.g., CreateProjectUseCase.ts)
+│   ├── dtos/             # Data Transfer Objects (DTOs) for request/response validation
+│   ├── validators/       # Input validation (e.g., Joi, Zod schemas)
+│
+├── infrastructure/       # External implementations (DB, third-party services)
+│   ├── repositories/     # Implements domain repositories (PostgreSQL queries)
+│   ├── database/         # Database connection setup (`pg`)
+│   │   ├── migrations/   # Raw SQL migration scripts
+│   │   ├── seeders/      # Database seeding scripts
+│   ├── services/         # External services (e.g., email, caching, file storage)
+│   ├── config/           # Database configurations, connection pool settings
+│
+├── presentation/         # API Layer (Controllers, Routes, Middleware)
+│   ├── controllers/      # Handles API requests (calls use-cases)
+│   ├── routes/           # Express API route definitions
+│   ├── middlewares/      # Authentication, error handling, logging, etc.
+│
+├── shared/               # Common utilities (error handling, helpers, constants)
+│   ├── utils/            # Helper functions
+│   ├── errors/           # Custom error classes
+│   ├── constants/        # App-wide constants and enums
+│
+├── config/               # App configurations (e.g., env variables, settings)
+│   ├── env.ts            # Loads environment variables
+│   ├── logger.ts         # Logging configuration
+│
+├── tests/                # Unit & integration tests (Jest, Supertest, etc.)
+│   ├── unit/             # Unit tests for use-cases, repositories, services
+│   ├── integration/      # Integration tests for API endpoints
+│
+├── app.ts                # Express app initialization
+├── server.ts             # Server entry point (starts Express app)
+├── types/                # TypeScript types/interfaces (e.g., Express custom types)
