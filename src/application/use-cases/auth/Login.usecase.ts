@@ -1,9 +1,6 @@
 import { AuthRepository } from "../../../domain/repositories/AuthRepository.repo";
+import { JwtService } from "../../../infrastructure/services/JWT.service";
 import { PasswordService } from "../../../shared/services/PasswordService";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from "../../../shared/utils/JWT";
 
 export class LoginUseCase {
   private authRepo: AuthRepository;
@@ -16,11 +13,14 @@ export class LoginUseCase {
     const user = await this.authRepo.findUserByEmail(email);
     if (!user) throw new Error("Invalid credentials");
 
-    const isMatch = await PasswordService.comparePassword(password, user.password as string);
+    const isMatch = await PasswordService.comparePassword(
+      password,
+      user.password as string
+    );
     if (!isMatch) throw new Error("Invalid credentials");
 
-    const accessToken = generateAccessToken(user.id!);
-    const refreshToken = generateRefreshToken(user.id!);
+    const accessToken = JwtService.generateAccessToken(user.id!);
+    const refreshToken = JwtService.generateRefreshToken(user.id!);
 
     return {
       user: {
