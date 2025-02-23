@@ -5,8 +5,9 @@ const checkDbConnection = async () => {
     const res = await pool.query("SELECT NOW();"); // Simple query to verify connection
     console.log("</> Database connection verified at:", res.rows[0].now);
   } catch (err) {
-    console.error("<!> Failed to verify database connection: ", err);
+    console.error();
+    throw new Error(`<!> Failed to verify database connection: ${err}`);
   }
 };
 
-export default checkDbConnection
+export default checkDbConnection;

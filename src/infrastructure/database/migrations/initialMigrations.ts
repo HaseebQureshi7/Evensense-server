@@ -54,8 +54,7 @@ async function initMigrations(): Promise<void> {
 
     console.log("Initial Migrations applied successfully");
   } catch (err) {
-    console.error("Error applying Migrations! ", err);
-    return;
+    throw new Error(`Error applying Migrations: ${err}`)
   }
 }
 
