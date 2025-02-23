@@ -3,6 +3,7 @@ import projectRouter from "./projects/project.routes";
 import userRouter from "./users/user.routes";
 import authRouter from "./auth/auth.routes";
 import taskRouter from "./tasks/task.routes";
+import taskAssignmentRouter from "./task_assignment/task_assignment.routes";
 
 const appRouter = Router();
 
@@ -10,5 +11,6 @@ appRouter.use("/auth", authRouter);
 appRouter.use("/user", userRouter);
 appRouter.use("/project", projectRouter);
 appRouter.use("/task", taskRouter)
+appRouter.use("/task_assignment", taskAssignmentRouter)
 
 export default appRouter;
