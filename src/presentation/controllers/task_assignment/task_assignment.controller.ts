@@ -1,10 +1,25 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../../shared/utils/catchAsync";
 import { ResponseHandler } from "../../../shared/utils/ResponseHandler";
+import { TaskAssignmentImpl } from "../../../infrastructure/repositories/TaskAssignmentRepository.impl";
+import { TaskAssignment } from "../../../domain/entities/TaskAssignment.entity";
+import { CreateTaskAssignmentUseCase } from "../../../application/use-cases/task_assignment/CreateTaskAssignment.usecase";
+import { GetAllTaskAssignmentUseCase } from "../../../application/use-cases/task_assignment/GetAllTaskAssignment.usecase";
+import { GetTaskAssignmentByIdUseCase } from "../../../application/use-cases/task_assignment/GetTaskAssignmentsById.usecase";
+import { GetTaskAssignmentsByUserIdUseCase } from "../../../application/use-cases/task_assignment/GetTaskAssignmentByUserId.usecase";
+import { GetTaskAssignmentsByProjectIdUseCase } from "../../../application/use-cases/task_assignment/GetTaskAssignmentByProjectId.usecase";
+import { UpdateTaskAssignmentUseCase } from "../../../application/use-cases/task_assignment/UpdateTaskAssignment.usecase";
+import { DeleteTaskAssignmentUseCase } from "../../../application/use-cases/task_assignment/DeleteTaskAssignment.usecase";
 
 export class TaskAssignmentController {
+  private taskAssignmentImpl = new TaskAssignmentImpl(
+
+  )
   createTaskAssignment = catchAsync(async (req: Request, res: Response) => {
-    const taskAssignment = null;
+    const { task_id, user_id }: TaskAssignment = req.body
+    const createTaskAssignmentUC = new CreateTaskAssignmentUseCase(this.taskAssignmentImpl);
+    const taskAssignment = await createTaskAssignmentUC.execute(task_id, user_id)
+
     return ResponseHandler.success(
       res,
       "Task Assignment created successfully",
@@ -14,64 +29,72 @@ export class TaskAssignmentController {
   });
 
   getAllTaskAssignment = catchAsync(async (req: Request, res: Response) => {
-    const taskAssignment = null;
+    const allTaskAssignments = await new GetAllTaskAssignmentUseCase(this.taskAssignmentImpl).execute();
     return ResponseHandler.success(
       res,
       "All Task Assignments fetched successfully",
-      201,
-      taskAssignment
+      200,
+      allTaskAssignments
     );
   });
 
   getTaskAssignmentsById = catchAsync(async (req: Request, res: Response) => {
-    const taskAssignment = null;
+    const ta_id = Number(req.params.ta_id)
+    const taskAssignmentFromId = await new GetTaskAssignmentByIdUseCase(this.taskAssignmentImpl).execute(ta_id)
     return ResponseHandler.success(
       res,
-      "Task Assignments of id : ${put id here} fetched successfully",
+      `Task Assignments of id : ${ta_id} fetched successfully`,
       200,
-      taskAssignment
+      taskAssignmentFromId
     );
   });
 
   getTaskAssignmentsByUserId = catchAsync(
     async (req: Request, res: Response) => {
-      const taskAssignment = null;
+      const uid = Number(req.params.uid)
+      const taskAssignmentFromUserId = await new GetTaskAssignmentsByUserIdUseCase(this.taskAssignmentImpl).execute(uid)
       return ResponseHandler.success(
         res,
-        "Task Assignments of user_id: ${put id here} fetched successfully",
+        `Task Assignments of user_id: ${uid} fetched successfully`,
         200,
-        taskAssignment
+        taskAssignmentFromUserId
       );
     }
   );
 
   getTaskAssignmentsByProjectId = catchAsync(
     async (req: Request, res: Response) => {
-      const taskAssignment = null;
+      const pid = Number(req.params.pid)
+      const taskAssignmentFromProjectId = await new GetTaskAssignmentsByProjectIdUseCase(this.taskAssignmentImpl).execute(pid)
       return ResponseHandler.success(
         res,
-        "Task Assignments of project_id: ${put id here} fetched successfully",
+        `Task Assignments of project_id: ${pid} fetched successfully`,
         200,
-        taskAssignment
+        taskAssignmentFromProjectId
       );
     }
   );
 
   updateTaskAssignment = catchAsync(async (req: Request, res: Response) => {
-    const taskAssignment = null;
+    const ta_id = Number(req.params.ta_id)
+    const updated_ta_body = req.body
+
+    const updated_task_assignment = await new UpdateTaskAssignmentUseCase(this.taskAssignmentImpl).execute(ta_id, updated_ta_body)
+
     return ResponseHandler.success(
       res,
-      "Task Assignment ${put id here} updated successfully",
+      `Task Assignment ${ta_id} updated successfully`,
       200,
-      taskAssignment
+      updated_task_assignment
     );
   });
 
   deleteTaskAssignment = catchAsync(async (req: Request, res: Response) => {
-    const taskAssignment = null;
+    const ta_id = Number(req.params.ta_id)
+    const taskAssignment = await new DeleteTaskAssignmentUseCase(this.taskAssignmentImpl).execute(ta_id);
     return ResponseHandler.success(
       res,
-      "Task Assignments ${put id here} deleted successfully",
+      `Task Assignments ${ta_id} deleted successfully`,
       200,
       taskAssignment
     );

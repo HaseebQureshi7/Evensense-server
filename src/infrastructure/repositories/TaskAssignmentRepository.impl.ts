@@ -41,7 +41,7 @@ export class TaskAssignmentImpl implements TaskAssignmentRepository {
   }
 
   async update(
-    task_id: number,
+    ta_id: number,
     updatedTaskAssignment: Partial<TaskAssignment>
   ): Promise<TaskAssignment> {
     const fields = Object.keys(updatedTaskAssignment);
@@ -59,13 +59,13 @@ export class TaskAssignmentImpl implements TaskAssignmentRepository {
     const query = `
           UPDATE task_assignment
           SET ${setClause}
-          WHERE task_id = $${fields.length + 1}
+          WHERE id = $${fields.length + 1}
           RETURNING *;
         `;
 
     // Execute the query
-    const res = await pool.query(query, [...values, task_id]);
-
+    const res = await pool.query(query, [...values, ta_id]);
+    console.log(query, [...values, ta_id])
     // Return the updated task assignment
     return res.rows[0];
   }

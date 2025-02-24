@@ -21,11 +21,11 @@ taskAssignmentRouter.get(
 );
 taskAssignmentRouter.post("/", taskAssignmentController.createTaskAssignment);
 taskAssignmentRouter.patch(
-  "/:tid",
+  "/:ta_id",
   taskAssignmentController.updateTaskAssignment
 );
 taskAssignmentRouter.delete(
-  "/:tid",
+  "/:ta_id",
   taskAssignmentController.deleteTaskAssignment
 );
 
