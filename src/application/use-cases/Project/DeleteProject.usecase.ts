@@ -5,9 +5,16 @@ export class DeleteProject {
         this.projectRepository = ProjectRepository
     }
 
-    async execute(pid:number) {
+    async execute(uid:number, pid:number) {
         if (!pid) {
             throw new Error("No project-id provided!")
+        }
+
+        const findProjectById = await this.projectRepository.getById(pid);
+        if (findProjectById?.user_id != uid) {
+          throw new Error(
+            "Access Error: Only the project owner can delete this project"
+          );
         }
         
         return this.projectRepository.delete(pid)

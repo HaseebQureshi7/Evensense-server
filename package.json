@@ -6,7 +6,6 @@
     "start": "ts-node-dev src/server.ts",
     "prod": "node dist/server.js",
     "build": "rimraf dist && tsc",
-    
     "test:unit": "jest src/tests/unit"
   },
   "keywords": [],
@@ -18,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.3"
   },

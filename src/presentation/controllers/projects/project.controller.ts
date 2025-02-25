@@ -1,4 +1,3 @@
-import { Project } from "./../../../domain/entities/Project.entity";
 import { ProjectRepositoryImpl } from "../../../infrastructure/repositories/ProjectRepository.impl";
 import { catchAsync } from "./../../../shared/utils/catchAsync";
 import { Request, Response } from "express";
@@ -14,25 +13,7 @@ import { UpdateProjectDTO } from "../../../application/dtos/project/updateProjec
 
 export class ProjectController {
   createProject = catchAsync(async (req: Request, res: Response) => {
-    const {
-      name,
-      description,
-      deadline,
-      est_deadline,
-      user_id,
-      project_logo,
-      start_date,
-    }: Project = req.body;
-
-    const projectData: CreateProjectDTO = {
-      name,
-      description,
-      deadline,
-      est_deadline,
-      user_id,
-      project_logo,
-      start_date,
-    };
+    const projectData: CreateProjectDTO = req.body
 
     // Dependency Injection
     // Inject repository into use case
@@ -74,11 +55,12 @@ export class ProjectController {
   });
 
   getProjectById = catchAsync(async (req: Request, res: Response) => {
-    const pid = Number(req.params.pid);
+    // const pid = Number(req.params.pid);
+    const pid = req.userId; // For better protection
     const getProjByIdRepo = new ProjectRepositoryImpl();
     const getProjByIdUsecase = new GetProjectByIdUsecase(getProjByIdRepo);
 
-    const project = await getProjByIdUsecase.execute(pid);
+    const project = await getProjByIdUsecase.execute(pid as number);
 
     if (!project) {
       return ResponseHandler.error(
@@ -98,6 +80,7 @@ export class ProjectController {
 
   updateProjectById = catchAsync(async (req: Request, res: Response) => {
     const pid = Number(req.params.pid);
+    const uid = Number(req.userId)
 
     const updatedProjectData: UpdateProjectDTO = req.body;
 
@@ -105,6 +88,7 @@ export class ProjectController {
     const updateProjUsecase = new UpdateProject(updateProjRepo);
 
     const updatedProject = await updateProjUsecase.execute(
+      uid,
       pid,
       updatedProjectData
     );
@@ -123,11 +107,12 @@ export class ProjectController {
 
   deleteProjectById = catchAsync(async (req: Request, res: Response) => {
     const pid = Number(req.params.pid);
+    const uid = Number(req.userId);
 
     const updateProjRepo = new ProjectRepositoryImpl();
     const deleteProjUsecase = new DeleteProject(updateProjRepo);
 
-    const deletedProject = await deleteProjUsecase.execute(pid);
+    const deletedProject = await deleteProjUsecase.execute(uid, pid);
 
     if (!deletedProject) {
       return ResponseHandler.error(res, "Project was not deleted!", 400);

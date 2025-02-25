@@ -28,8 +28,10 @@ export class AuthController {
 
   userSignup = catchAsync(async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
+
     const signupUseCase = new SignupUseCase(authRepo);
     const user = await signupUseCase.execute(name, email, password);
+
     res.status(201).json({ message: "User registered successfully", user });
   });
 
