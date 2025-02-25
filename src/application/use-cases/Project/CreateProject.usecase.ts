@@ -1,6 +1,6 @@
 import { ProjectRepository } from "../../../domain/repositories/ProjectRepository.repo";
 import { Project } from "../../../domain/entities/Project.entity";
-import { CreateProjectDTO } from "../../dtos/createProject.dto";
+import { CreateProjectDTO } from "../../dtos/project/createProject.dto";
 
 export class CreateProjectUseCase {
   private projectRepository: ProjectRepository;
@@ -9,14 +9,12 @@ export class CreateProjectUseCase {
     this.projectRepository = projectRepository;
   }
 
-  async execute(data: CreateProjectDTO): Promise<Project> {
+  async execute(projectDetails: CreateProjectDTO): Promise<Project> {
     // Business Logic Check here 
-    if (!data.name || !data.description) {
-      throw new Error("Project name and description are required!");
+    if (!projectDetails.name || !projectDetails.description || !projectDetails.user_id) {
+      throw new Error("Project name, user_id, or description are required!");
     }
 
-    const project = new Project(data.name, data.description, data.user_id, data.deadline, data.projectLogo, data.estDeadline, data.startDate);
-
-    return this.projectRepository.create(project);
+    return this.projectRepository.create(projectDetails);
   }
 }

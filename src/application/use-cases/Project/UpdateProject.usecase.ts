@@ -1,5 +1,5 @@
-import { Project } from "../../../domain/entities/Project.entity";
 import { ProjectRepository } from "../../../domain/repositories/ProjectRepository.repo";
+import { UpdateProjectDTO } from "../../dtos/project/updateProject.dto";
 
 export class UpdateProject {
   private projectRepository: ProjectRepository;
@@ -7,7 +7,7 @@ export class UpdateProject {
     this.projectRepository = ProjectRepository;
   }
 
-  async execute(pid: number, projectData: Partial<Project>) {
+  async execute(pid: number, projectData: UpdateProjectDTO) {
     if (!projectData || !pid) {
       throw new Error("Project Data or Id not provided!");
     }

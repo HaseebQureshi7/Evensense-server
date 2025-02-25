@@ -1,13 +1,15 @@
-export class Project{
-    constructor (
-        public name: string,
-        public description: string,
-        public user_id : number,
-        public deadline?: string,
-        public project_logo?: string,
-        public est_deadline?: string,
-        public start_date?: string,
-        public id?: number,
-        public created_at?: Date,
-    ) {}
+export interface Project {
+    id?: string;
+    name: string;
+    description: string;
+    user_id: number;
+    deadline?: Date;
+    project_logo?: string;
+    est_deadline?: Date;
+    start_date?: Date;
+    tech_stack?: Date;
+    project_architecture?: string[];
+    document_links?: string[];
+    project_links?: string[];
+    created_at?: Date;
 }

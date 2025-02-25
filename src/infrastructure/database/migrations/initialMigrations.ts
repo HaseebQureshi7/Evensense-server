@@ -20,26 +20,6 @@ async function initMigrations(): Promise<void> {
       `CREATE TABLE IF NOT EXISTS task (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, status VARCHAR(255) NOT NULL CHECK (status IN ('open', 'close', 'conflict')), deadline DATE, comments VARCHAR(1000), project_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE);`
     );
 
-    // DOCUMENT TABLE
-    await pool.query(
-      `CREATE TABLE IF NOT EXISTS document (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, doc_url VARCHAR(500), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`
-    );
-
-    // TECHNOLOGY TABLE
-    await pool.query(
-      `CREATE TABLE IF NOT EXISTS tech (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, used_for VARCHAR(500), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`
-    );
-
-    // ARCHITECTURE TABLE
-    await pool.query(
-      `CREATE TABLE IF NOT EXISTS architecture (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, detail VARCHAR(1500), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`
-    );
-
-    // LINK TABLE
-    await pool.query(
-      `CREATE TABLE IF NOT EXISTS link (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, url VARCHAR(500), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`
-    );
-
     // JUNCTION TABLES (ONLY CREATE MANY TO MANY TABLES, (otherwise add a FK field in the tables))
 
     // PROJECT TEAM - JUNCTION TABLE

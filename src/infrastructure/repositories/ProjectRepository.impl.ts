@@ -1,9 +1,11 @@
 import { ProjectRepository } from "../../domain/repositories/ProjectRepository.repo";
 import { Project } from "../../domain/entities/Project.entity";
 import pool from "../database/databaseConfig";
+import { CreateProjectDTO } from "../../application/dtos/project/createProject.dto";
+import { UpdateProjectDTO } from "../../application/dtos/project/updateProject.dto";
 
 export class ProjectRepositoryImpl implements ProjectRepository {
-  async create(project: Project): Promise<Project> {
+  async create(project: CreateProjectDTO): Promise<Project> {
     const {
       name,
       description,
@@ -12,11 +14,15 @@ export class ProjectRepositoryImpl implements ProjectRepository {
       est_deadline,
       project_logo,
       start_date,
-    }: Project = project;
+      document_links,
+      project_architecture,
+      project_links,
+      tech_stack,
+    }: CreateProjectDTO = project;
 
     const result = await pool.query(
-      `INSERT INTO project (name, description, deadline, user_id, project_logo, est_deadline, start_date) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`,
+      `INSERT INTO project (name, description, deadline, user_id, project_logo, est_deadline, start_date, document_links, project_architecture, project_links, tech_stack) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;`,
       [
         name,
         description,
@@ -25,6 +31,10 @@ export class ProjectRepositoryImpl implements ProjectRepository {
         project_logo,
         est_deadline,
         start_date,
+        document_links,
+        project_architecture,
+        project_links,
+        tech_stack,
       ]
     );
 
@@ -42,7 +52,7 @@ export class ProjectRepositoryImpl implements ProjectRepository {
     return result.rows[0];
   }
 
-  async update(pid: number, updatedData: Partial<Project>): Promise<Project> {
+  async update(pid: number, updatedData: UpdateProjectDTO): Promise<Project> {
     // Extract keys and values from provided data
     const fields = Object.keys(updatedData);
     const values = Object.values(updatedData);

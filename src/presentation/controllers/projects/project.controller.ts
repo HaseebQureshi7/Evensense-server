@@ -9,6 +9,8 @@ import { GetProjectByIdUsecase } from "../../../application/use-cases/Project/Ge
 import { UpdateProject } from "../../../application/use-cases/Project/UpdateProject.usecase";
 import { DeleteProject } from "../../../application/use-cases/Project/DeleteProject.usecase";
 import { GetUserProjectsUsecase } from "../../../application/use-cases/Project/GetUserProjects.usecase";
+import { CreateProjectDTO } from "../../../application/dtos/project/createProject.dto";
+import { UpdateProjectDTO } from "../../../application/dtos/project/updateProject.dto";
 
 export class ProjectController {
   createProject = catchAsync(async (req: Request, res: Response) => {
@@ -22,7 +24,7 @@ export class ProjectController {
       start_date,
     }: Project = req.body;
 
-    const projectData: Project = {
+    const projectData: CreateProjectDTO = {
       name,
       description,
       deadline,
@@ -97,27 +99,15 @@ export class ProjectController {
   updateProjectById = catchAsync(async (req: Request, res: Response) => {
     const pid = Number(req.params.pid);
 
-    const {
-      name,
-      deadline,
-      description,
-      est_deadline,
-      project_logo,
-      start_date,
-    }: Partial<Project> = req.body;
-    const projectData: Partial<Project> = {
-      name,
-      deadline,
-      description,
-      est_deadline,
-      project_logo,
-      start_date,
-    };
+    const updatedProjectData: UpdateProjectDTO = req.body;
 
     const updateProjRepo = new ProjectRepositoryImpl();
     const updateProjUsecase = new UpdateProject(updateProjRepo);
 
-    const updatedProject = await updateProjUsecase.execute(pid, projectData);
+    const updatedProject = await updateProjUsecase.execute(
+      pid,
+      updatedProjectData
+    );
 
     if (!updatedProject) {
       return ResponseHandler.error(res, "Project was not updated!", 400);
@@ -153,12 +143,14 @@ export class ProjectController {
 
   //
   getUserProjects = catchAsync(async (req: Request, res: Response) => {
-    const uid = Number(req.params.uid)
-    
-    const getAllUserProjsRepo = new ProjectRepositoryImpl();
-    const getAllUserProjsRepoUsecase = new GetUserProjectsUsecase(getAllUserProjsRepo)
+    const uid = Number(req.params.uid);
 
-    const userProjects = await getAllUserProjsRepoUsecase.execute(uid)
+    const getAllUserProjsRepo = new ProjectRepositoryImpl();
+    const getAllUserProjsRepoUsecase = new GetUserProjectsUsecase(
+      getAllUserProjsRepo
+    );
+
+    const userProjects = await getAllUserProjsRepoUsecase.execute(uid);
 
     if (!userProjects) {
       return ResponseHandler.error(
@@ -174,5 +166,5 @@ export class ProjectController {
       200,
       userProjects
     );
-  })
+  });
 }
