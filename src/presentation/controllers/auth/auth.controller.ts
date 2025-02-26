@@ -4,6 +4,7 @@ import { LoginUseCase } from "../../../application/use-cases/auth/Login.usecase"
 import { AuthRepositoryImpl } from "../../../infrastructure/repositories/AuthRepository.impl";
 import { SignupUseCase } from "../../../application/use-cases/auth/Signup.usecase";
 import { RefreshTokenUseCase } from "../../../application/use-cases/auth/RefreshToken.usecase";
+import { cookie_options } from "../../../config/cookieOptions.config";
 
 const authRepo = new AuthRepositoryImpl();
 
@@ -20,7 +21,7 @@ export class AuthController {
     );
 
     // Store refresh token in an HTTP-only cookie
-    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
+    res.cookie("refreshToken", refreshToken, cookie_options);
 
     // Send user details and access token in the response
     res.status(200).json({ user, accessToken });
