@@ -17,10 +17,19 @@ async function startup() {
     // Calculate elapsed time
     const elapsedTime = performance.now() - startTime;
     console.info(
-      consoleUtil.successLog(`</>All startup tasks executed successfully in ${elapsedTime.toFixed(2)}ms`)
+      consoleUtil.successLog(`\nAll startup tasks executed successfully in ${elapsedTime.toFixed(2)}ms`)
     );
   } catch (err) {
-    console.error("<!> Error during startup tasks:", err);
+    console.error("\n<!> Error during startup tasks:\n\n", err);
+
+    // Server Shutdown Messages
+    console.error("\nShutting server down in 3 seconds...");
+    setTimeout(() => console.error("Shutting server down in 2..."), 1000);
+    setTimeout(() => console.error("Shutting server down in 1..."), 2000);
+    setTimeout(() => {
+      console.error("❌ Server shutdown.");
+      process.exit(1);
+    }, 3000);
   }
 }
 

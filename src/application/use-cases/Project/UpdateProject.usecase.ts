@@ -1,5 +1,4 @@
 import { ProjectRepository } from "../../../domain/repositories/ProjectRepository.repo";
-import { ProjectRepositoryImpl } from "../../../infrastructure/repositories/ProjectRepository.impl";
 import { UpdateProjectDTO } from "../../dtos/project/updateProject.dto";
 
 export class UpdateProject {
@@ -13,6 +12,7 @@ export class UpdateProject {
       throw new Error("Project Data or Id not provided!");
     }
 
+    // RBAC
     const findProjectById = await this.projectRepository.getById(pid);
     if (findProjectById?.user_id != uid) {
       throw new Error(

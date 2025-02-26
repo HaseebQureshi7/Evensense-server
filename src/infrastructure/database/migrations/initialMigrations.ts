@@ -1,3 +1,4 @@
+import { ConsoleUtil } from "../../../shared/utils/Console";
 import pool from "../databaseConfig";
 
 async function initMigrations(): Promise<void> {
@@ -20,6 +21,11 @@ async function initMigrations(): Promise<void> {
       `CREATE TABLE IF NOT EXISTS task (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, status VARCHAR(255) NOT NULL CHECK (status IN ('open', 'close', 'conflict')), deadline DATE, comments VARCHAR(1000), project_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE);`
     );
 
+    // ACTIVITY LOG TABLE
+    await pool.query(
+      `CREATE TABLE IF NOT EXISTS activity_log (id SERIAL PRIMARY KEY, action VARCHAR(100) NOT NULL, details TEXT, user_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`
+    )
+
     // JUNCTION TABLES (ONLY CREATE MANY TO MANY TABLES, (otherwise add a FK field in the tables))
 
     // PROJECT TEAM - JUNCTION TABLE
@@ -32,7 +38,7 @@ async function initMigrations(): Promise<void> {
       `CREATE TABLE IF NOT EXISTS task_assignment (id SERIAL PRIMARY KEY, task_id INT NOT NULL, user_id INT NOT NULL, FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)`
     );
 
-    console.log("Initial Migrations applied successfully");
+    console.log(new ConsoleUtil().successLog("Initial Migrations applied successfully"));
   } catch (err) {
     throw new Error(`Error applying Migrations: ${err}`)
   }

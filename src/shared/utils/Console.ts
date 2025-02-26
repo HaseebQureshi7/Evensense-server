@@ -1,6 +1,6 @@
 export class ConsoleUtil {
   // Define ANSI escape codes for colors
-  colors = {
+  private colors = {
     success: "\x1b[32m", // Green for success
     error: "\x1b[31m", // Red for error
     warning: "\x1b[33m", // Yellow for warning
