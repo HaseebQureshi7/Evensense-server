@@ -23,7 +23,7 @@ async function initMigrations(): Promise<void> {
 
     // ACTIVITY LOG TABLE
     await pool.query(
-      `CREATE TABLE IF NOT EXISTS activity_log (id SERIAL PRIMARY KEY, action VARCHAR(100) NOT NULL, details TEXT, user_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);`
+      `CREATE TABLE IF NOT EXISTS activity_log (id SERIAL PRIMARY KEY, action VARCHAR(100) NOT NULL, details TEXT, user_id INT NOT NULL, project_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (project_id) REFERENCES project(id));`
     )
 
     // JUNCTION TABLES (ONLY CREATE MANY TO MANY TABLES, (otherwise add a FK field in the tables))
