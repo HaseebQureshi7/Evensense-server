@@ -8,7 +8,7 @@ const activityLogController = new ActivityLogController();
 // CRUD
 activityLogRouter.get("/", activityLogController.getAllActivityLogs);
 activityLogRouter.get("/:al_id", activityLogController.getActivityLogById);
-activityLogRouter.get("/:pid", activityLogController.getActivityLogByProjectId);
+activityLogRouter.get("/project/:pid", activityLogController.getActivityLogByProjectId);
 activityLogRouter.post("/", activityLogController.createActivityLog);
 activityLogRouter.patch("/:al_id", activityLogController.updateActivityLog);
 activityLogRouter.delete("/:al_id", activityLogController.deleteActivityLog);

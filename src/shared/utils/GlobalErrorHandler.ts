@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
+import { AppError } from "../utils/AppError"; // Import the custom error class
 
-interface AppError extends Error {
-  status?: number;
-}
-
-export const globalErrorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
+export const globalErrorHandler = (
+  err: AppError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const currentDate = new Date().toLocaleString("en-US", {
     timeZone: "UTC",
     year: "numeric",
@@ -16,17 +18,19 @@ export const globalErrorHandler = (err: AppError, req: Request, res: Response, n
     hour12: true,
   });
 
+  const statusCode = err instanceof AppError ? err.statusCode : 500;
+
   const customError = {
     url: req.originalUrl,
     origin: req.headers["user-agent"] || "Unknown",
     timeStamp: currentDate,
-    status: err.status || 500,
+    status: statusCode,
     message: err.message || "Internal Server Error",
   };
 
   console.error("❌ Error Log:", customError);
 
-  res.status(customError.status).json({
+  res.status(statusCode).json({
     success: false,
     error: {
       message: customError.message,

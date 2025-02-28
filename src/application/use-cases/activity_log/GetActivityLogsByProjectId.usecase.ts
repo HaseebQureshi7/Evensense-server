@@ -1,3 +1,4 @@
+import { AppError } from "../../../shared/utils/AppError";
 import { ActivityLogRepository } from "./../../../domain/repositories/ActivityLogRepository.repo";
 export class GetActivityLogsByProjectIdUsecase {
   private activityLogRepository: ActivityLogRepository;
@@ -6,10 +7,18 @@ export class GetActivityLogsByProjectIdUsecase {
     this.activityLogRepository = activityLogRepository;
   }
 
-  execute(pid: number) {
+  async execute(pid: number) {
     if (!pid) {
-      throw new Error(`Missing required fields: project_id`);
+      throw new AppError(`Missing required fields: project_id`, 400);
     }
-    return this.activityLogRepository.getByProjectId(pid);
+    
+    const projectLogs = await this.activityLogRepository.getByProjectId(pid)
+
+    // --> NOT NEEDED
+    // if (projectLogs.length <= 0) {
+    //   throw new AppError(`No Activity Logs found for this project`, 200);
+    // }
+
+    return projectLogs;
   }
 }

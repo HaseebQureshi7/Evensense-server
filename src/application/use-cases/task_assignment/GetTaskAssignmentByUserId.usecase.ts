@@ -1,3 +1,4 @@
+import { AppError } from '../../../shared/utils/AppError';
 import { TaskAssignmentRepository } from './../../../domain/repositories/TaskAssignmentRepository.repo';
 export class GetTaskAssignmentsByUserIdUseCase {
     private taskAssignmentRepo: TaskAssignmentRepository
@@ -5,10 +6,19 @@ export class GetTaskAssignmentsByUserIdUseCase {
         this.taskAssignmentRepo = TaskAssignmentRepository
     }
 
-    execute(uid: number) {
+    async execute(uid: number) {
         if (!uid) {
-            throw new Error("Missing required field user_id!")
+            throw new AppError("Missing required field user_id!", 400)
         }
-        return this.taskAssignmentRepo.getByUserId(uid)
+
+        const userExists = await this.taskAssignmentRepo.getById(uid);
+        
+        if (!userExists) {
+            throw new AppError(`Provided user does not exist!`, 404)
+        }
+        
+        const taskAssns = await this.taskAssignmentRepo.getByUserId(uid)
+
+        return taskAssns
     }
 }

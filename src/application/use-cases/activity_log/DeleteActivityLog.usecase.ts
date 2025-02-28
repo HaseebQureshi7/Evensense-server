@@ -1,3 +1,4 @@
+import { AppError } from "../../../shared/utils/AppError";
 import { ActivityLogRepository } from "./../../../domain/repositories/ActivityLogRepository.repo";
 export class DeleteActivityLogUsecase {
   private activityLogRepository: ActivityLogRepository;
@@ -6,15 +7,22 @@ export class DeleteActivityLogUsecase {
     this.activityLogRepository = activityLogRepository;
   }
 
-  execute(al_id: number) {
+  async execute(al_id: number) {
     if (!al_id) {
       throw new Error(
         `Missing required fields: id`
       );
     }
 
-    // Probably check if the activity log exists or not
-    
-    return this.activityLogRepository.delete(al_id);
+    const deletedLog = await this.activityLogRepository.delete(al_id);
+
+    if (!deletedLog) {
+      throw new AppError(
+        "Activity log not found or could not be deleted",
+        404
+      );
+    }
+
+    return deletedLog
   }
 }

@@ -1,4 +1,4 @@
-import { CreateActivityLogDTO } from "../../dtos/activity_log/createActivityLog.dto";
+import { AppError } from "../../../shared/utils/AppError";
 import { ActivityLogRepository } from "./../../../domain/repositories/ActivityLogRepository.repo";
 export class GetAllActivityLogsUsecase {
   private activityLogRepository: ActivityLogRepository;
@@ -7,7 +7,12 @@ export class GetAllActivityLogsUsecase {
     this.activityLogRepository = activityLogRepository;
   }
 
-  execute() {    
-    return this.activityLogRepository.getAll();
+  async execute() {    
+    const allALogs = await this.activityLogRepository.getAll();
+    if (allALogs.length < 0) {
+      throw new AppError("No Activity Logs present", 204)
+    }
+
+    return allALogs
   }
 }
