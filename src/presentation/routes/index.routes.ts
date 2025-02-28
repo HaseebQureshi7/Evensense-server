@@ -1,4 +1,5 @@
 import { Router } from "express";
+import healthRouter from "./health/health.routes";
 import projectRouter from "./projects/project.routes";
 import userRouter from "./users/user.routes";
 import authRouter from "./auth/auth.routes";
@@ -8,6 +9,7 @@ import projectTeamRouter from "./project_team/project_team.routes";
 
 const appRouter = Router();
 
+appRouter.use("/health", healthRouter);
 appRouter.use("/auth", authRouter);
 appRouter.use("/user", userRouter);
 appRouter.use("/project", projectRouter);

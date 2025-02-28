@@ -1,0 +1,42 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: ["**"]  # ✅ Runs on all branches (correct)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:  # ✅ Inject PG environment variables (Optional)
+      PG_HOST: ${{ secrets.PG_HOST }}
+      PG_USER: ${{ secrets.PG_USER }}
+      PG_PORT: ${{ secrets.PG_PORT }}
+      PG_DATABASE: ${{ secrets.PG_DATABASE }}
+      PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+      NODE_ENV: "test"
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js and cache dependencies
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: npm ci  # ✅ Uses `npm ci` for faster, cleaner installs in CI
+
+      # Step 4: Debug environment variables
+      - name: Debug Env Variables
+        run: env | grep PG_
+        if: ${{ runner.debug }}  # ✅ Only runs in debug mode
+
+      # Step 5: Run integration tests
+      - name: Run Integration Tests
+        run: npm run test:integration
