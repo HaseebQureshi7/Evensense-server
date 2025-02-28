@@ -16,6 +16,8 @@ jobs:
       PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
       NODE_ENV: "test"
       PORT: ${{ secrets.PORT }}
+      JWT_ACCESS_TOKEN_SECRET: ${{ secrets.JWT_ACCESS_TOKEN_SECRET }}
+      JWT_REFRESH_TOKEN_SECRET: ${{ secrets.JWT_REFRESH_TOKEN_SECRET }}
 
     steps:
       # Step 1: Checkout the repository
