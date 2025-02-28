@@ -15,6 +15,7 @@ jobs:
       PG_DATABASE: ${{ secrets.PG_DATABASE }}
       PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
       NODE_ENV: "test"
+      PORT: ${{ secrets.PORT }}
 
     steps:
       # Step 1: Checkout the repository
