@@ -1,3 +1,4 @@
+import { AppError } from '../../../shared/utils/AppError';
 import { TaskAssignmentRepository } from './../../../domain/repositories/TaskAssignmentRepository.repo';
 export class CreateTaskAssignmentUseCase {
     private taskAssignmentRepo: TaskAssignmentRepository
@@ -5,11 +6,17 @@ export class CreateTaskAssignmentUseCase {
         this.taskAssignmentRepo = TaskAssignmentRepository
     }
 
-    execute(task_id: number, user_id: number) {
+    async execute(task_id: number, user_id: number) {
         if (!task_id || !user_id) {
-            throw new Error(`Missing required fields!. Provide task_id and user_id`)
+            throw new AppError(`Missing required fields!. Provide task_id and user_id`, 400)
+        }
+        
+        const newTask = await this.taskAssignmentRepo.create(task_id, user_id)
+        
+        if (!newTask) {
+            throw new AppError(`Failure! Task Assignment was not created!`, 500)
         }
 
-        return this.taskAssignmentRepo.create(task_id, user_id)
+        return newTask
     }
 }

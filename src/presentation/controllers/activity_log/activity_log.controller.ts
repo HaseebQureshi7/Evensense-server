@@ -9,6 +9,7 @@ import { GetActivityLogsByProjectIdUsecase } from "../../../application/use-case
 import { UpdateActivityLogUsecase } from "../../../application/use-cases/activity_log/UpdateActivityLog.usecase";
 import { DeleteActivityLogUsecase } from "../../../application/use-cases/activity_log/DeleteActivityLog.usecase";
 import { GetAllActivityLogsUsecase } from "../../../application/use-cases/activity_log/GetAllActivityLogs.usecase";
+import { UpdateActivityLogDTO } from "../../../application/dtos/activity_log/updateActivityLog.dto";
 
 export class ActivityLogController {
   private ALogImpl = new ActivityLogImpl();
@@ -44,10 +45,6 @@ export class ActivityLogController {
       Number(al_id)
     );
 
-    if (!log) {
-      return ResponseHandler.error(res, "Activity log not found", 404);
-    }
-
     return ResponseHandler.success(
       res,
       "Activity log retrieved successfully",
@@ -74,15 +71,11 @@ export class ActivityLogController {
 
   updateActivityLog = catchAsync(async (req: Request, res: Response) => {
     const { al_id } = req.params;
-    const updateData = req.body;
+    const updateData: UpdateActivityLogDTO = req.body;
 
     const updatedLog = await new UpdateActivityLogUsecase(
       this.ALogImpl
     ).execute(Number(al_id), updateData);
-
-    // if (!updatedLog) {
-    //   return ResponseHandler.error(res, "Activity log not found or could not be updated", 404);
-    // }
 
     return ResponseHandler.success(
       res,
@@ -97,14 +90,6 @@ export class ActivityLogController {
     const deletedLog = await new DeleteActivityLogUsecase(
       this.ALogImpl
     ).execute(Number(al_id));
-
-    if (!deletedLog) {
-      return ResponseHandler.error(
-        res,
-        "Activity log not found or could not be deleted",
-        404
-      );
-    }
 
     return ResponseHandler.success(
       res,

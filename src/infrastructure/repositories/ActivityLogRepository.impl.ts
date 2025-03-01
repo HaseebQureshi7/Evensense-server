@@ -78,7 +78,7 @@ export class ActivityLogImpl implements ActivityLogRepository {
     return res.rows[0];
   }
 
-  async getByProjectId(pid: number): Promise<ActivityLog[] | null> {
+  async getByProjectId(pid: number): Promise<ActivityLog[] | []> {
     const res = await pool.query(
       `SELECT * FROM activity_log WHERE project_id = $1`,
       [pid]

@@ -5,7 +5,7 @@ import { ActivityLog } from "../entities/ActivityLog.entity";
 export interface ActivityLogRepository {
   getAll(): Promise<ActivityLog[]>;
   getById(al_id: number): Promise<ActivityLog | null>;
-  getByProjectId(pid: number): Promise<ActivityLog[] | null>;
+  getByProjectId(pid: number): Promise<ActivityLog[] | []>;
   create(activityLogDetails: CreateActivityLogDTO): Promise<ActivityLog>;
   update(
     al_id: number,
