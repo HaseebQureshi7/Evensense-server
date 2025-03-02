@@ -1,5 +1,6 @@
 import checkDbConnection from "./infrastructure/database/checkDatabaseConnection";
 import runInitMigrations from "./infrastructure/database/migrations";
+import { connectToKafka } from "./infrastructure/kafka/init";
 import { ConsoleUtil } from "./shared/utils/Console";
 
 async function startup() {
@@ -13,6 +14,9 @@ async function startup() {
     await checkDbConnection();
     // Run initial migrations for db
     await runInitMigrations();
+
+    // Connect all Kafka brokers
+    await connectToKafka();
 
     // Calculate elapsed time
     const elapsedTime = performance.now() - startTime;

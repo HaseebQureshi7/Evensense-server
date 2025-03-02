@@ -17,9 +17,11 @@ export class TaskAssignmentController {
 
   )
   createTaskAssignment = catchAsync(async (req: Request, res: Response) => {
+    const uid = Number(req.userId);
     const { task_id, user_id }: TaskAssignment = req.body
+    
     const createTaskAssignmentUC = new CreateTaskAssignmentUseCase(this.taskAssignmentImpl);
-    const taskAssignment = await createTaskAssignmentUC.execute(task_id, user_id)
+    const taskAssignment = await createTaskAssignmentUC.execute(uid, task_id, user_id)
 
     return ResponseHandler.success(
       res,
@@ -85,10 +87,11 @@ export class TaskAssignmentController {
   );
 
   updateTaskAssignment = catchAsync(async (req: Request, res: Response) => {
-    const ta_id = Number(req.params.ta_id)
-    const updated_ta_body = req.body
+    const uid = Number(req.userId);
+    const ta_id = Number(req.params.ta_id);
+    const updated_ta_body = req.body;
 
-    const updated_task_assignment = await new UpdateTaskAssignmentUseCase(this.taskAssignmentImpl).execute(ta_id, updated_ta_body)
+    const updated_task_assignment = await new UpdateTaskAssignmentUseCase(this.taskAssignmentImpl).execute(uid, ta_id, updated_ta_body)
 
     return ResponseHandler.success(
       res,

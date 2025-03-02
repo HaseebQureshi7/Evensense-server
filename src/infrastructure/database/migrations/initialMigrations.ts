@@ -30,12 +30,12 @@ async function initMigrations(): Promise<void> {
 
     // PROJECT TEAM - JUNCTION TABLE
     await pool.query(
-      `CREATE TABLE IF NOT EXISTS project_team (id SERIAL PRIMARY KEY, project_id INT NOT NULL, user_id INT NOT NULL, FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)`
+      `CREATE TABLE IF NOT EXISTS project_team (id SERIAL PRIMARY KEY, project_id INT NOT NULL, user_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)`
     );
 
     // TASK ASSIGNMENT - JUNCTION TABLE
     await pool.query(
-      `CREATE TABLE IF NOT EXISTS task_assignment (id SERIAL PRIMARY KEY, task_id INT NOT NULL, user_id INT NOT NULL, FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)`
+      `CREATE TABLE IF NOT EXISTS task_assignment (id SERIAL PRIMARY KEY, task_id INT NOT NULL, user_id INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)`
     );
 
     console.log(new ConsoleUtil().successLog("Initial Migrations applied successfully"));

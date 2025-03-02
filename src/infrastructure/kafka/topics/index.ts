@@ -1,0 +1,1 @@
+export type currentTopics = "activity_log_topic";

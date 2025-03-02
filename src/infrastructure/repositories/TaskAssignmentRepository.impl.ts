@@ -5,7 +5,7 @@ import pool from "../database/databaseConfig";
 export class TaskAssignmentImpl implements TaskAssignmentRepository {
   async create(task_id: number, user_id: number): Promise<TaskAssignment> {
     const res = await pool.query(
-      `INSERT INTO task_assignment (task_id, user_id) VALUES($1, $2)`,
+      `INSERT INTO task_assignment (task_id, user_id) VALUES($1, $2) RETURNING *`,
       [task_id, user_id]
     );
     return res.rows[0];

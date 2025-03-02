@@ -93,10 +93,6 @@ export class ProjectController {
       updatedProjectData
     );
 
-    if (!updatedProject) {
-      return ResponseHandler.error(res, "Project was not updated!", 400);
-    }
-
     return ResponseHandler.success(
       res,
       "Project updated successfully!",

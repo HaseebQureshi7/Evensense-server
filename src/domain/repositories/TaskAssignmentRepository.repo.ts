@@ -1,3 +1,4 @@
+import { UpdateTaskAssignmentDTO } from "../../application/dtos/task_assignment/UpdateTaskAssignment.dto";
 import { TaskAssignment } from "../entities/TaskAssignment.entity";
 
 export interface TaskAssignmentRepository {
@@ -8,7 +9,7 @@ export interface TaskAssignmentRepository {
   create(task_id: number, user_id: number): Promise<TaskAssignment>;
   update(
     task_id: number,
-    updatedTaskAssignment: TaskAssignment
+    updatedTaskAssignment: UpdateTaskAssignmentDTO
   ): Promise<TaskAssignment>;
   delete(ta_id: number): Promise<TaskAssignment>;
 }

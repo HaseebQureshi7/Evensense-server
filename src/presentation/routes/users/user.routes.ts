@@ -6,6 +6,7 @@ const userRouter = Router();
 const userController = new UserController();
 
 // Protect routes using the middleware
+userRouter.get("/:uid", userController.findUserProfile);
 userRouter.patch("/", authenticateUser, userController.updateProfile);
 userRouter.delete("/", authenticateUser, userController.deleteProfile);
 

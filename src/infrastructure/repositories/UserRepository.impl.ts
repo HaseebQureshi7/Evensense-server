@@ -3,6 +3,14 @@ import { UserRepository } from "../../domain/repositories/UserRepository.repo";
 import pool from "../database/databaseConfig";
 
 export class UserRepositoryImpl implements UserRepository {
+  async findUser(uid: number): Promise<User | undefined> {
+    const res = await pool.query(
+      `SELECT * FROM users WHERE id = $1`,
+      [uid]
+    );
+    return res.rows[0];
+  }
+
   async updateUser(uid: number, updatedUser: Partial<User>): Promise<User> {
     const { name, email, password } = updatedUser;
     const res = await pool.query(

@@ -9,54 +9,100 @@ import { ViewTaskByIdUseCase } from "../../../application/use-cases/task/ViewTas
 import { TaskRepositoryImpl } from "../../../infrastructure/repositories/TaskRepository.impl";
 import { ResponseHandler } from "../../../shared/utils/ResponseHandler";
 import { ProjectRepositoryImpl } from "../../../infrastructure/repositories/ProjectRepository.impl";
+import { UpdateTaskDTO } from "../../../application/dtos/task/updateTask.dto";
 
 export class TaskController {
-    private taskRepository = new TaskRepositoryImpl()
-    viewAllTasks = catchAsync(async (req: Request, res: Response) => {
-        const tasks = await new ViewAllTasksUseCase(this.taskRepository).execute();
+  private taskRepository = new TaskRepositoryImpl();
+  viewAllTasks = catchAsync(async (req: Request, res: Response) => {
+    const tasks = await new ViewAllTasksUseCase(this.taskRepository).execute();
 
-        return ResponseHandler.success(res, "All tasks fetched successfully", 200, tasks)
-    });
+    return ResponseHandler.success(
+      res,
+      "All tasks fetched successfully",
+      200,
+      tasks
+    );
+  });
 
-    viewTaskById = catchAsync(async (req: Request, res: Response) => {
-        const { tid } = req.params;
+  viewTaskById = catchAsync(async (req: Request, res: Response) => {
+    const { tid } = req.params;
 
-        const task = await new ViewTaskByIdUseCase(this.taskRepository).execute(Number(tid));
+    const task = await new ViewTaskByIdUseCase(this.taskRepository).execute(
+      Number(tid)
+    );
 
-        return ResponseHandler.success(res, `Task with id : ${tid} fetched successfully`, 200, task)
-    });
+    return ResponseHandler.success(
+      res,
+      `Task with id : ${tid} fetched successfully`,
+      200,
+      task
+    );
+  });
 
-    viewProjectTasks = catchAsync(async (req: Request, res: Response) => {
-        const { pid } = req.params;
+  viewProjectTasks = catchAsync(async (req: Request, res: Response) => {
+    const { pid } = req.params;
 
-        const projectImpl = new ProjectRepositoryImpl()
-        const tasks = await new ViewProjectTasksUseCase(this.taskRepository, projectImpl).execute(Number(pid));
+    const projectImpl = new ProjectRepositoryImpl();
+    const tasks = await new ViewProjectTasksUseCase(
+      this.taskRepository,
+      projectImpl
+    ).execute(Number(pid));
 
-        return ResponseHandler.success(res, "All project tasks fetched successfully", 200, tasks)
-    });
+    return ResponseHandler.success(
+      res,
+      "All project tasks fetched successfully",
+      200,
+      tasks
+    );
+  });
 
-    createTask = catchAsync(async (req: Request, res: Response) => {
-        const taskData = req.body;
+  createTask = catchAsync(async (req: Request, res: Response) => {
+    const taskData = req.body;
+    const uid = Number(req.userId);
 
-        const task = await new CreateTaskUseCase(this.taskRepository).execute(taskData);
+    const task = await new CreateTaskUseCase(this.taskRepository).execute(
+      uid,
+      taskData
+    );
 
-        return ResponseHandler.success(res, "Task created successfully", 201, task)
-    });
+    return ResponseHandler.success(res, "Task created successfully", 201, task);
+  });
 
-    updateTask = catchAsync(async (req: Request, res: Response) => {
-        const { tid } = req.params;
-        const taskData = req.body;
+  updateTask = catchAsync(async (req: Request, res: Response) => {
+    const uid = Number(req.userId);
+    const { tid } = req.params;
+    const { name, comments, deadline, status }: UpdateTaskDTO = req.body;
+    const taskData = {
+      name,
+      comments,
+      deadline,
+      status,
+    };
 
-        const updatedTask = await new UpdateTaskUseCase(this.taskRepository).execute(Number(tid), taskData);
+    const updatedTask = await new UpdateTaskUseCase(
+      this.taskRepository
+    ).execute(uid, Number(tid), taskData);
 
-        return ResponseHandler.success(res, `Task ${tid} updated successfully`, 200, updatedTask)
-    });
+    return ResponseHandler.success(
+      res,
+      `Task ${tid} updated successfully`,
+      200,
+      updatedTask
+    );
+  });
 
-    deleteTask = catchAsync(async (req: Request, res: Response) => {
-        const { tid } = req.params;
+  deleteTask = catchAsync(async (req: Request, res: Response) => {
+    const { tid } = req.params;
 
-        const deletedTask = await new DeleteTaskUseCase(this.taskRepository).execute(Number(tid));
+    const deletedTask = await new DeleteTaskUseCase(
+      this.taskRepository
+    ).execute(Number(tid));
 
-        return ResponseHandler.success(res, `Task ${tid} deleted successfully`, 200, deletedTask)
-    });
+    return ResponseHandler.success(
+      res,
+      `Task ${tid} deleted successfully`,
+      200,
+      deletedTask
+    );
+  });
 }
